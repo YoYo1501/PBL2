@@ -1,5 +1,7 @@
-admin,admin123,admin,Admin System, ,,,,
-Sanh,123,student,Bui Quang Sanh,102240108,,,,
-Linh,123,student,Le Van Linh,102240108,,,,
-d,d,student,c,x,,,,
-1,1,student,1,1,,,,
+admin|admin123|admin|Admin System|||||
+sanh|123456|student|Bui Quang Sanh|102240108|01/01/2005|Da Nang|0901234567|sanh@gmail.com
+QuangSanh|123123|admin|Bui Quang Sanh|102240108||||
+Quangsanh|1234|student|B Q S|102240108||||
+S|1|student|s|f||||
+Linh|123|student||||||
+Sanh|123|student|Bui|d||||

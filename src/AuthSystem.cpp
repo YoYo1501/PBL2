@@ -79,9 +79,14 @@ void AuthSystem::logout() {
     currentUser = nullptr;
 }
 
-User* AuthSystem::getCurrentUser() const {
-    return currentUser;
+User& AuthSystem::getCurrentUser() {
+    return *currentUser;
 }
+
+const User& AuthSystem::getCurrentUser() const {
+    return *currentUser;
+}
+
 
 bool AuthSystem::isLoggedIn() const {
     return currentUser != nullptr;

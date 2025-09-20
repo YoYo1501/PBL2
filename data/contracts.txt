@@ -1,0 +1,4 @@
+// Mỗi dòng là một hợp đồng: contractId|studentId|roomId|startDate|endDate|status
+// Ví dụ:
+// HD001|105256460|P101|01/09/2025|31/12/2025|Con hieu luc
+// HD002|105256460|P102|01/01/2025|31/08/2025|Da ket thuc
