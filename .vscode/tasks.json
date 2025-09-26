@@ -13,6 +13,7 @@
                 "src/AdminMenu.cpp",
                 "src/StudentMenu.cpp",
                 "src/MainMenu.cpp",
+                "src/Graphics.cpp",
                 "src/models/User.cpp",
                 "src/models/Room.cpp",
                 "src/models/Payment.cpp",

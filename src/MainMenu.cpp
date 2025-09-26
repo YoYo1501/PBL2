@@ -2,6 +2,7 @@
 #include "../include/StudentInfo.h"
 #include "../include/StudentMenu.h"
 #include "../include/AdminMenu.h"
+#include "../include/Graphics.h"
 #include <iostream>
 #include <fstream>
 #include <conio.h>
@@ -27,21 +28,34 @@ std::string getHiddenPassword() {
 }
 
 void handleLogin(AuthSystem& auth) {
-    string u, p;
-    cout << "Username: "; cin >> u;
-    cout << "Password: ";
-    p = getHiddenPassword();
+    Graphics::showMainHeader();
+    Graphics::showMenuHeader("DANG NHAP HE THONG");
+    
+    string u = Graphics::getStyledInput("Ten dang nhap");
+    
+    Graphics::setColor(LIGHTCYAN, BLACK);
+    cout << "    >> Mat khau: ";
+    Graphics::resetColor();
+    string p = getHiddenPassword();
+    
+    Graphics::showLoadingBar("Dang xac thuc thong tin", 800);
+    
     if (auth.login(u, p)) {
+        Graphics::showSuccessMessage("Dang nhap thanh cong!");
         User& current = auth.getCurrentUser();
+        
         if (auth.isAdmin()) {
+            Graphics::pauseWithMessage("Nhan Enter de vao giao dien quan ly...");
             AdminMenu am;
             am.show();
         } else if (auth.isStudent()) {
+            Graphics::pauseWithMessage("Nhan Enter de vao giao dien sinh vien...");
             StudentMenu sm(current, auth);
             sm.show();
         }
     } else {
-        cout << ">> Dang nhap that bai!\n";
+        Graphics::showErrorMessage("Dang nhap that bai! Kiem tra lai thong tin.");
+        Graphics::pauseWithMessage();
     }
 }
 
@@ -61,7 +75,16 @@ void handleRegister(AuthSystem& auth) {
     if (r == "student") {
         StudentInfo info;
         do { cout << "Nhap ho ten: "; getline(cin, info.fullName); if(info.fullName.empty()) cout << "Khong duoc de trong!\n"; } while(info.fullName.empty());
-        do { cout << "Nhap gioi tinh: "; getline(cin, info.gender); if(info.gender.empty()) cout << "Khong duoc de trong!\n"; } while(info.gender.empty());
+        
+        int genderChoice = 0;
+        do {
+            cout << "Chon gioi tinh:\n1. Nam\n2. Nu\nLua chon: ";
+            cin >> genderChoice;
+            if (genderChoice != 1 && genderChoice != 2) cout << "Lua chon khong hop le!\n";
+        } while (genderChoice != 1 && genderChoice != 2);
+        info.gender = (genderChoice == 1) ? "Nam" : "Nu";
+        cin.ignore();
+        
         do { cout << "Nhap que quan: "; getline(cin, info.address); if(info.address.empty()) cout << "Khong duoc de trong!\n"; } while(info.address.empty());
         do { cout << "Nhap ngay sinh (dd/mm/yyyy): "; getline(cin, info.dob); if(info.dob.empty()) cout << "Khong duoc de trong!\n"; } while(info.dob.empty());
         do { cout << "Nhap lop: "; getline(cin, info.classId); if(info.classId.empty()) cout << "Khong duoc de trong!\n"; } while(info.classId.empty());
@@ -97,17 +120,38 @@ void handleRegister(AuthSystem& auth) {
 void showMainMenu(AuthSystem& auth) {
     int choice;
     do {
-        cout << "\n===== HE THONG QUAN LY KY TUC XA =====\n";
-        cout << "1. Dang nhap\n";
-        cout << "2. Dang ky\n";
-        cout << "0. Thoat\n";
-        cout << "Lua chon: ";
+        Graphics::showMainHeader();
+        Graphics::showMenuHeader("MENU CHINH");
+        
+        Graphics::showMenuOption(1, "Dang nhap");
+        Graphics::showMenuOption(2, "Dang ky tai khoan");
+        Graphics::showMenuSeparator();
+        Graphics::showMenuOption(0, "Thoat chuong trinh");
+        
+        Graphics::showMenuFooter();
+        
+        Graphics::setColor(YELLOW, BLACK);
+        cout << "    >> Lua chon cua ban: ";
+        Graphics::setColor(WHITE, BLACK);
         cin >> choice;
+        Graphics::resetColor();
+        
         switch (choice) {
-            case 1: handleLogin(auth); break;
-            case 2: handleRegister(auth); break;
-            case 0: cout << ">> Thoat chuong trinh!\n"; break;
-            default: cout << "Lua chon khong hop le!\n";
+            case 1: 
+                cin.ignore();
+                handleLogin(auth); 
+                break;
+            case 2: 
+                cin.ignore();
+                handleRegister(auth); 
+                break;
+            case 0: 
+                Graphics::showSuccessMessage("Cam on ban da su dung he thong!");
+                Graphics::showLoadingBar("Dang thoat", 500);
+                break;
+            default: 
+                Graphics::showErrorMessage("Lua chon khong hop le!");
+                Graphics::pauseWithMessage();
         }
     } while (choice != 0);
 }

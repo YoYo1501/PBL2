@@ -71,7 +71,9 @@ void User::viewProfile() const {
             std::vector<std::string> tokens;
             while (getline(iss, token, '|')) tokens.push_back(token);
             if (!tokens.empty() && tokens[0] == mssv) {
-                for (size_t i = 0; i < tokens.size() && i < fields.size(); ++i) fields[i] = tokens[i];
+                // Đảm bảo có đủ 12 trường
+                while (tokens.size() < 12) tokens.push_back("Chua cap nhat");
+                for (size_t i = 0; i < 12; ++i) fields[i] = tokens[i];
                 found = true;
                 break;
             }
@@ -79,35 +81,141 @@ void User::viewProfile() const {
         fin.close();
     }
     cout << "\n===== THONG TIN CA NHAN =====\n";
-    cout << "Ho ten      : " << fields[1] << endl;
     cout << "MSSV        : " << fields[0] << endl;
+    cout << "Ho ten      : " << fields[1] << endl;
+    cout << "Gioi tinh   : " << fields[2] << endl;
+    cout << "Que quan    : " << fields[3] << endl;
     cout << "Ngay sinh   : " << fields[4] << endl;
-    cout << "Dia chi     : " << fields[9] << endl;
+    cout << "Lop         : " << fields[5] << endl;
+    cout << "Nganh       : " << fields[6] << endl;
     cout << "So dien thoai: " << fields[7] << endl;
-    cout << "Email       : " << fields[10] << endl;
+    cout << "Email       : " << fields[8] << endl;
+    cout << "Dia chi hien tai: " << fields[9] << endl;
+    cout << "Ngan hang   : " << fields[10] << endl;
+    cout << "So TK       : " << fields[11] << endl;
     cout << "=============================\n";
 }
+
 
 // Chỉnh sửa hồ sơ
 void User::editProfile() {
     cout << "\n===== CHINH SUA THONG TIN CA NHAN =====\n";
+    
+    // Đọc thông tin hiện tại từ file information.txt
+    std::string mssv = studentId;
+    std::string infoFile = "data/information.txt";
+    std::vector<std::string> allLines;
+    std::vector<std::string> currentInfo(12, "");
+    bool found = false;
+    
+    // Đọc tất cả dữ liệu
+    std::ifstream fin(infoFile);
+    std::string line;
+    while (getline(fin, line)) {
+        allLines.push_back(line);
+        if (!found) {
+            std::istringstream iss(line);
+            std::string token;
+            std::vector<std::string> tokens;
+            while (getline(iss, token, '|')) tokens.push_back(token);
+            if (!tokens.empty() && tokens[0] == mssv) {
+                while (tokens.size() < 12) tokens.push_back("");
+                currentInfo = tokens;
+                found = true;
+            }
+        }
+    }
+    fin.close();
+    
+    // Cho phép chỉnh sửa
     string input;
-
-    cin.ignore();
+    cout << "Ho ten hien tai: " << currentInfo[1] << endl;
     cout << "Ho ten moi (Enter de bo qua): ";
-    getline(cin, input); if (!input.empty()) fullname = input;
+    getline(cin, input); 
+    if (!input.empty()) {
+        currentInfo[1] = input;
+        fullname = input; // Cập nhật trong User object
+    }
 
+    cout << "Ngay sinh hien tai: " << currentInfo[4] << endl;
     cout << "Ngay sinh moi (Enter de bo qua): ";
-    getline(cin, input); if (!input.empty()) dob = input;
+    getline(cin, input); 
+    if (!input.empty()) {
+        currentInfo[4] = input;
+        dob = input;
+    }
 
-    cout << "Dia chi moi (Enter de bo qua): ";
-    getline(cin, input); if (!input.empty()) address = input;
+    cout << "Que quan hien tai: " << currentInfo[3] << endl;
+    cout << "Que quan moi (Enter de bo qua): ";
+    getline(cin, input); 
+    if (!input.empty()) {
+        currentInfo[3] = input;
+    }
 
+    cout << "So dien thoai hien tai: " << currentInfo[7] << endl;
     cout << "So dien thoai moi (Enter de bo qua): ";
-    getline(cin, input); if (!input.empty()) phone = input;
+    getline(cin, input); 
+    if (!input.empty()) {
+        currentInfo[7] = input;
+        phone = input;
+    }
 
+    cout << "Email hien tai: " << currentInfo[8] << endl;
     cout << "Email moi (Enter de bo qua): ";
-    getline(cin, input); if (!input.empty()) email = input;
+    getline(cin, input); 
+    if (!input.empty()) {
+        currentInfo[8] = input;
+        email = input;
+    }
+
+    cout << "Dia chi hien tai: " << currentInfo[9] << endl;
+    cout << "Dia chi moi (Enter de bo qua): ";
+    getline(cin, input); 
+    if (!input.empty()) {
+        currentInfo[9] = input;
+        address = input;
+    }
+
+    cout << "Ten ngan hang hien tai: " << currentInfo[10] << endl;
+    cout << "Ten ngan hang moi (Enter de bo qua): ";
+    getline(cin, input); 
+    if (!input.empty()) {
+        currentInfo[10] = input;
+    }
+
+    cout << "So tai khoan hien tai: " << currentInfo[11] << endl;
+    cout << "So tai khoan moi (Enter de bo qua): ";
+    getline(cin, input); 
+    if (!input.empty()) {
+        currentInfo[11] = input;
+    }
+
+    // Ghi lại file với thông tin đã cập nhật
+    std::ofstream fout(infoFile);
+    if (fout.is_open()) {
+        for (const auto& fileLine : allLines) {
+            std::istringstream iss(fileLine);
+            std::string token;
+            std::vector<std::string> tokens;
+            while (getline(iss, token, '|')) tokens.push_back(token);
+            
+            if (!tokens.empty() && tokens[0] == mssv) {
+                // Ghi dòng đã cập nhật
+                fout << currentInfo[0]; // MSSV
+                for (size_t i = 1; i < 12; ++i) {
+                    fout << "|" << currentInfo[i];
+                }
+                fout << std::endl;
+            } else {
+                // Ghi dòng gốc
+                fout << fileLine << std::endl;
+            }
+        }
+        fout.close();
+        cout << "\n>> Cap nhat thong tin thanh cong!\n";
+    } else {
+        cout << "\n>> Loi khi cap nhat file!\n";
+    }
 
     cout << ">> Cap nhat thong tin thanh cong!\n";
 }

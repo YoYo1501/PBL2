@@ -1,0 +1,10 @@
+A101|Toa A|1|2|1|partially_occupied|1500000|double
+A102|Toa A|1|2|0|available|1500000|double
+A103|Toa A|1|4|2|partially_occupied|2000000|quad
+A201|Toa A|2|2|2|full|1500000|double
+A202|Toa A|2|2|0|available|1500000|double
+B101|Toa B|1|1|0|available|1200000|single
+B102|Toa B|1|1|1|full|1200000|single
+B103|Toa B|1|2|0|available|1500000|double
+C101|Toa C|1|4|3|partially_occupied|2000000|quad
+C102|Toa C|1|4|0|available|2000000|quad

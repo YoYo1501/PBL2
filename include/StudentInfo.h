@@ -19,7 +19,7 @@ struct StudentInfo
 
     std::string toString() const
     {
-        return studentId + "|" + fullName + "|" + gender + "|" + address + "|" + dob + "|" + classId + "|" + major + "|" + phone + "|" + bankName + "|" + bankAccount;
+        return studentId + "|" + fullName + "|" + gender + "|" + address + "|" + dob + "|" + classId + "|" + major + "|" + phone + "|" + email + "|" + addressDetail + "|" + bankName + "|" + bankAccount;
     }
 };
 
